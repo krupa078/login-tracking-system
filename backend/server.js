@@ -21,6 +21,7 @@ app.use(cors({
     "http://localhost:5173",
     "https://login-tracking-system.vercel.app",
     "https://login-tracking-system-4aojd2xpp-kona-krupamanis-projects.vercel.app",
+    "https://login-tracking-system-git-main-kona-krupamanis-projects.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
