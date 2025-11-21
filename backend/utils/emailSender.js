@@ -2,19 +2,19 @@ const { Resend } = require("resend");
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function sendEmail(to, subject, message) {
+async function sendEmail(to, subject, html) {
   try {
-    await resend.emails.send({
+    const response = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to,
       subject,
-      html: `<p>${message}</p>`,
+      html,
     });
 
-    console.log("Email sent:", to);
+    console.log("Email sent:", response);
     return true;
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("Email error:", error);
     return false;
   }
 }
