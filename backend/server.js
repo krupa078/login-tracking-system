@@ -67,26 +67,26 @@ const User = mongoose.model("User", userSchema);
 
 // ============ EMAIL (OTP) TRANSPORTER ============
 // Configure real email sending using Gmail or any SMTP provider.
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// ============ EMAIL (OTP) USING RESEND API ============
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Helper: send OTP email
 async function sendOtpEmail(email, otp) {
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-    to: email,
-    subject: "Your Login OTP",
-    text: `Your OTP for login is: ${otp}. It is valid for 10 minutes.`,
-  };
+  try {
+    const res = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+      to: email,
+      subject: "Your Login OTP",
+      html: `<p>Your OTP for login is: <b>${otp}</b>. Valid for 10 minutes.</p>`,
+    });
 
-  const info = await transporter.sendMail(mailOptions);
-  console.log("📧 OTP email sent:", info.response || info.messageId || info);
+    console.log("📧 OTP email sent:", res);
+  } catch (err) {
+    console.error("Email send error:", err);
+    throw err;
+  }
 }
+
 
 // Helper: get current hour in Asia/Kolkata
 function getCurrentHourInIST() {
